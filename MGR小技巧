@@ -7,10 +7,19 @@ select  t2.MEMBER_HOST,t1.MEMBER_ID from  performance_schema.replication_group_m
 inner join  performance_schema.replication_group_members as t2  on t1.MEMBER_ID=t2.MEMBER_ID;
 
 
-MGR节点重新加入集群(加入新节点)
+####MGR节点重新加入集群(加入新节点)
 
 1、查看最新的GTID
 select TRANSACTIONS_COMMITTED_ALL_MEMBERS from performance_schema.replication_group_member_stats\G;
 2、丢弃之前的GTID重新加入集群
 SET @@GLOBAL.GTID_PURGED='be4533b6-b62e-462f-8a63-ef5db05cb60c:1-13'
 
+
+GTID相关参数
+参数	comment
+gtid_executed	执行过的所有GTID
+gtid_purged	丢弃掉的GTID
+gtid_mode	gtid模式
+gtid_next	session级别的变量，下一个gtid
+gtid_owned	正在运行的gtid
+enforce_gtid_consistency	保证GTID安全的参数
