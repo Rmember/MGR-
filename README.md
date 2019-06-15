@@ -2,9 +2,22 @@ MGR一键部署
 MGR节点重新加入集群
 
 1、查看最新的GTID
-select TRANSACTIONS_COMMITTED_ALL_MEMBERS from performance_schema.replication_group_member_stats\G;\n
+select TRANSACTIONS_COMMITTED_ALL_MEMBERS from performance_schema.replication_group_member_stats\G;
 2、丢弃之前的GTID重新加入集群
 SET @@GLOBAL.GTID_PURGED='be4533b6-b62e-462f-8a63-ef5db05cb60c:1-13'
+
+
+
+####MGR集群查询当前数据库对应标识
+select  t2.MEMBER_HOST,t1.MEMBER_ID from  performance_schema.replication_group_member_stats as t1
+inner join  performance_schema.replication_group_members as t2  on t1.MEMBER_ID=t2.MEMBER_ID;
+
+####MGR集群查询当前集群主节点
+select t2.MEMBER_HOST,t1.VARIABLE_VALUE from performance_schema.global_status as t1
+inner join performance_schema.replication_group_members  as t2 on t1.VARIABLE_NAME=t2.MEMBER_ID;
+
+
+
 
 
 1.1.3 重要参数的持久化
