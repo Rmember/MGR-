@@ -12,7 +12,6 @@ socket                              = /appdata/mysql/mysql.sock
 
 [mysqld]
 port                                = 3306
-#basedir                             = /appdata/mysql
 datadir                             = /appdata/mysql/data
 socket                              = /appdata/mysql/mysql.sock
 log_error                           = /appdata/mysql/log/error.log
@@ -23,4 +22,35 @@ binlog_format                       = ROW
 server_id                           = 2
 
 
+#useradd mysql -s /sbin/nologin
+#mkdir -p /appdata/mysql/log
+#chown mysql. /appdata/mysql/ -R
+
+#/usr/local/mysql/bin/mysqld  --initialize --user=mysql
+
+
 三、建立环境变量，设置为系统服务
+
+#ln -s /usr/local/mysql/bin/mysql /usr/bin/mysql
+
+#vim /usr/lib/systemd/system/mysqld.service
+[Unit]
+Description=Mysql
+After=syslog.target network.target remote-fs.target nss-lookup.target
+
+[Service]
+Type=forking
+PIDFile=/appdata/mysql/mysqld.pid
+ExecStart=/usr/local/mysql/support-files/mysql.server start
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s QUIT $MAINPID
+PrivateTmp=false
+
+[Install]
+WantedBy=multi-user.target
+
+
+#systemctl  daemon-reload
+#systemctl  restart mysqld
+#systemctl  status mysqld
+
