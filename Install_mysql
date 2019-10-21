@@ -1,0 +1,26 @@
+一、获取安装包
+https://dev.mysql.com/downloads/mysql/
+
+
+二、创建配置文件，服务初始化
+
+#vim /etc/my.cnf
+[client]
+port                                = 3306
+socket                              = /appdata/mysql/mysql.sock
+
+
+[mysqld]
+port                                = 3306
+#basedir                             = /appdata/mysql
+datadir                             = /appdata/mysql/data
+socket                              = /appdata/mysql/mysql.sock
+log_error                           = /appdata/mysql/log/error.log
+pid-file                            = /appdata/mysql/mysqld.pid
+character_set_server                = utf8
+log_bin                             = binlog
+binlog_format                       = ROW
+server_id                           = 2
+
+
+三、建立环境变量，设置为系统服务
