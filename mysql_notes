@@ -1,5 +1,8 @@
 增：
-1、add user
+1、创建用户并授权
+GRANT SELECT ON logistics_dms.* TO user@'%' IDENTIFIED BY '*******';
+
+
 2、add databases
 3、add permission
 4、add tables
