@@ -30,6 +30,8 @@ ALTER TABLE example ADD price INT;
 
 5、更新数据
 UPDATE example SET price=123 WHERE title='A';
+  (1) 更新日期数据
+     UPDATE example SET date=DATE_SUB(date,INTERVAL 7 DAY) WHERE title='C';
 
 6、删除数据
 DELETE FROM example WHERE id=1;
