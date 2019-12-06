@@ -3,7 +3,34 @@
 GRANT SELECT ON logistics_dms.* TO user@'%' IDENTIFIED BY '*******';
 
 
-2、add databases
-3、add permission
-4、add tables
-5、add 
+
+2、创建表结构
+CREATE TABLE IF NOT EXISTS `example`(
+   `id` INT UNSIGNED AUTO_INCREMENT,
+   `title` VARCHAR(100) NOT NULL,
+   `author` VARCHAR(40) NOT NULL,
+   `date` DATE,
+   PRIMARY KEY ( `id` )
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+3、插入数据
+INSERT INTO example (title,author,date,price) VALUES
+("A","root",NOW(),23),
+("B","root",NOW(),32),
+("C","root",NOW(),34),
+("D","root",NOW(),123),
+("E","root",NOW(),54),
+("F","root",NOW(),34),
+("G","root",NOW(),35),
+("H","root",NOW(),321);
+					
+4、增加字段
+ALTER TABLE example ADD price INT;
+
+5、更新数据
+UPDATE example SET price=123 WHERE title='A';
+
+6、删除数据
+DELETE FROM example WHERE id=1;
+
