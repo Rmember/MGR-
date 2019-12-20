@@ -1,0 +1,41 @@
+CREATE USER 'bkpuser'@'%' IDENTIFIED BY '123';
+GRANT  PROCESS,RELOAD, LOCK TABLES, REPLICATION CLIENT ON *.* TO 'bkpuser'@'%';
+
+###全量备份
+##1 先一次全量备份
+ innobackupex --defaults-file=/etc/my.cnf --user=bkpuser --password=123 --host=10.0.2.124 --no-timestamp  /data/databak/fullbackup
+##2 再prepare全备
+ innobackupex --apply-log /data/databak/fullbackup
+##3 还原
+ innobackupex --defaults-file=/etc/my.cnf --copy-back /data/databak/fullbackup
+ 
+ 
+ 
+ 
+ ###单个库增量备份
+##1 先全量备份一次 
+ innobackupex --defaults-file=/etc/my.cnf --host=10.0.2.124 --user=bkpuser --password=123 --no-timestamp  /data/databak/fullbackup
+##2 第一次增量备份 
+ innobackupex --defaults-file=/etc/my.cnf --host=10.0.2.124 --user=bkpuser --password=123 --no-timestamp --databases="test" --incremental-basedir=/data/databak/fullbackup  --incremental /data/databak/test1
+##3 --插入新数据
+ INSERT INTO test.example (title,author,date,price) VALUES ('I','root',NOW(),146);
+##4 最后一次增量备份
+ innobackupex --defaults-file=/etc/my.cnf --host=10.0.2.124 --user=bkpuser --password=123 --no-timestamp --databases="test" --incremental-basedir=/data/databak/test1  --incremental /data/databak/test2
+
+##4 关闭数据库
+ systemctl stop mysqld
+
+##5 先prepare全量备份
+ innobackupex --incremental --apply-log --redo-only --use_memory=500M /data/databak/fullbackup
+##6 再prepare第一个增量
+ innobackupex --incremental --apply-log --redo-only --use_memory=500M /data/databak/fullbackup  --incremental-dir=/data/databak/test1 
+##7 然后prepare最后一个增量 (最后一步不需要--redo-only)
+ innobackupex --incremental --apply-log --use_memory=500M /data/databak/fullbackup  --incremental-dir=/data/databak/test2
+
+
+##8 备份数据目录,copy增量数据 (先cp最后一次增量数据，再cp初始化后的全量数据)
+ cp -rf /appdata/mysql/data /appdata/mysql/data.bak
+ cp -rf /data/databak/test2/*  /appdata/mysql/data/
+ cp -rf /data/databak/fullbackup/*  /appdata/mysql/data/
+##9 启动数据库 验证
+ systemctl start mysqld
