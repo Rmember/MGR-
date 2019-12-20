@@ -34,6 +34,7 @@ GRANT  PROCESS,RELOAD, LOCK TABLES, REPLICATION CLIENT ON *.* TO 'bkpuser'@'%';
 
 
 ##8 备份数据目录,copy增量数据 (先cp最后一次增量数据，再cp初始化后的全量数据)
+##因为多次增量备份期间可能会有新的表创建，而全备则没有相应的表文件，所有必需要拷贝最后一次的增量备份文件
  cp -rf /appdata/mysql/data /appdata/mysql/data.bak
  cp -rf /data/databak/test2/*  /appdata/mysql/data/
  cp -rf /data/databak/fullbackup/*  /appdata/mysql/data/
