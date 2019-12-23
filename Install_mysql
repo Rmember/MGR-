@@ -1,6 +1,9 @@
 一、获取安装包
 https://dev.mysql.com/downloads/mysql/
 
+wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.28-linux-glibc2.12-x86_64.tar.gz
+
+
 
 二、创建配置文件，服务初始化
 
