@@ -59,3 +59,4 @@ WantedBy=multi-user.target
 #systemctl  restart mysqld
 #systemctl  status mysqld
 
+alter user root@localhost identified by '123';
